@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <Windows.h>
 
-#include "Core/Logger.hpp"
+#include "core/Logger.hpp"
 
 
 namespace Core

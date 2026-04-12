@@ -16,6 +16,7 @@ A library with various utilities.
 
 #include "core/Pointer.hpp"
 #include "core/Logger.hpp"
+#include "core/WindowsException.hpp"
 
 
 struct Person
@@ -56,6 +57,9 @@ int main()
             // Log info.
             logger.Info("Person modified. Name: %s, Age: %d.", person.Name, person.Age);
         }
+
+        // Throw a Windows exception.
+        throw Core::WindowsException("Couldn't open a file.", HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED));
     }
     catch (const std::exception& ex)
     {
