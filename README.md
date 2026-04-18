@@ -50,7 +50,7 @@ int main()
         }
         else
         {
-            // Access data at some offset from the pointer's address.
+            // Access data at an offset from the pointer's address.
             personPointer.at(offsetof(Person, Name)).as<const char*>() = "Jane Smith";
             personPointer.at(offsetof(Person, Age)).as<int>() = 45;
 
@@ -59,7 +59,7 @@ int main()
         }
 
         // Throw a Windows exception.
-        throw Core::WindowsException("Couldn't open a file.", HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED));
+        throw Core::WindowsException(E_ACCESSDENIED, "Couldn't open '%s' file.", "C:\\secret.txt");
     }
     catch (const std::exception& ex)
     {

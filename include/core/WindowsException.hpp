@@ -10,7 +10,7 @@ namespace Core
     class WindowsException : public std::exception
     {
     public:
-        WindowsException(const char* message, HRESULT hresult);
+        WindowsException(HRESULT hresult, const char* format, ...);
 
     public:
         const char* what() const override;

@@ -10,19 +10,19 @@ namespace Core
 
     public:
         template <typename... Args>
-        void Info(const char* format, Args... args) const
+        __forceinline void Info(const char* format, Args... args) const
         {
             Log("INFO", format, args...);
         }
 
         template <typename... Args>
-        void Warning(const char* format, Args... args) const
+        __forceinline void Warning(const char* format, Args... args) const
         {
             Log("WARNING", format, args...);
         }
 
         template <typename... Args>
-        void Error(const char* format, Args... args) const
+        __forceinline void Error(const char* format, Args... args) const
         {
             Log("ERROR", format, args...);
         }
