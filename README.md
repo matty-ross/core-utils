@@ -13,10 +13,12 @@ A library with various utilities.
 #include <cstdlib>
 #include <cstddef>
 #include <exception>
+#include <Windows.h>
 
 #include "core/Pointer.hpp"
 #include "core/Logger.hpp"
 #include "core/WindowsException.hpp"
+#include "core/Patch.hpp"
 
 
 struct Person
@@ -46,7 +48,7 @@ int main()
         if (personPointer.GetAddress() == nullptr)
         {
             // Log warning.
-            logger.Warning("Couldn't modify person.");
+            logger.Warning("Cannot modify the person.");
         }
         else
         {
@@ -58,8 +60,14 @@ int main()
             logger.Info("Person modified. Name: %s, Age: %d.", person.Name, person.Age);
         }
 
+        // Create a patch for the first 7 bytes of the MessageBoxA function.
+        Core::Patch patch(logger, MessageBoxA, 0x7);
+
+        // Apply the patch, writing <jmp target> instruction there.
+        patch.WriteJump(0xDEADBEEF);
+
         // Throw a Windows exception.
-        throw Core::WindowsException(E_ACCESSDENIED, "Couldn't open '%s' file.", "C:\\secret.txt");
+        throw Core::WindowsException(E_ACCESSDENIED, "Cannot open '%s' file.", "C:\\secret.txt");
     }
     catch (const std::exception& ex)
     {
