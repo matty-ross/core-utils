@@ -30,6 +30,9 @@ struct Person
 
 int main()
 {
+    // Initialize logging.
+    Core::Logger::Initialize();
+
     // Create a logger.
     Core::Logger logger("Example");
 

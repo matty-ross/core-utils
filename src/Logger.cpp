@@ -13,6 +13,20 @@ namespace Core
     {
     }
 
+    void Logger::Initialize()
+    {
+        AllocConsole();
+        HANDLE consoleOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+
+        DWORD consoleMode = 0;
+        GetConsoleMode(consoleOutputHandle, &consoleMode);
+        consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        SetConsoleMode(consoleOutputHandle, consoleMode);
+
+        FILE* newStdout = nullptr;
+        freopen_s(&newStdout, "CONOUT$", "w", stdout);
+    }
+
     void Logger::Log(const char* level, const char* format, ...) const
     {
         SYSTEMTIME localTime = {};
@@ -26,7 +40,7 @@ namespace Core
         va_end(args);
 
         printf_s(
-            "[%04d-%02d-%02d %02d:%02d:%02d.%03d]  %-10s  %-20s  :  %s\n",
+            "[%04d-%02d-%02d %02d:%02d:%02d.%03d]  %-20s  %-20s  :  %s\n",
             localTime.wYear,
             localTime.wMonth,
             localTime.wDay,
