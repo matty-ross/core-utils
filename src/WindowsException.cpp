@@ -9,7 +9,6 @@ namespace Core
     WindowsException::WindowsException(HRESULT hresult, const char* format, ...)
     {
         char message[1024] = {};
-
         va_list args = {};
         va_start(args, format);
         vsprintf_s(message, format, args);

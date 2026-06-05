@@ -16,15 +16,12 @@ namespace Core
     void Logger::Initialize()
     {
         AllocConsole();
-        HANDLE consoleOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 
+        HANDLE consoleOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
         DWORD consoleMode = 0;
         GetConsoleMode(consoleOutputHandle, &consoleMode);
         consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
         SetConsoleMode(consoleOutputHandle, consoleMode);
-
-        FILE* newStdout = nullptr;
-        freopen_s(&newStdout, "CONOUT$", "w", stdout);
     }
 
     void Logger::Log(const char* level, const char* format, ...) const
@@ -33,13 +30,14 @@ namespace Core
         GetLocalTime(&localTime);
 
         char message[1024] = {};
-
         va_list args = {};
         va_start(args, format);
         vsprintf_s(message, format, args);
         va_end(args);
 
-        printf_s(
+        char log[1024] = {};
+        int logLength = sprintf_s(
+            log,
             "[%04d-%02d-%02d %02d:%02d:%02d.%03d]  %-20s  %-20s  :  %s\n",
             localTime.wYear,
             localTime.wMonth,
@@ -52,5 +50,8 @@ namespace Core
             m_Name,
             message
         );
+
+        HANDLE consoleOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+        WriteConsoleA(consoleOutputHandle, log, logLength, nullptr, nullptr);
     }
 }
