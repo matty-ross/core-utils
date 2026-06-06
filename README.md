@@ -4,21 +4,17 @@
 ![](https://img.shields.io/badge/Visual%20Studio-5C2D91?style=for-the-badge&logo=visual-studio&logoColor=white)
 ![](https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)
 
-A library with various utilities.
+A library with various utilities for low-level Windows applications.
 
 
 ## Usage
 
-```cpp
-#include <cstdlib>
-#include <cstddef>
-#include <exception>
-#include <Windows.h>
+### `Core::Pointer`
 
+Bypasses C++ pointer arithmetic and allows direct access to data at byte offsets.
+
+```cpp
 #include "core/Pointer.hpp"
-#include "core/Logger.hpp"
-#include "core/WindowsException.hpp"
-#include "core/Patch.hpp"
 
 
 struct Person
@@ -28,61 +24,68 @@ struct Person
 };
 
 
-int WINAPI WinMain(
-    _In_ HINSTANCE hInstance,
-    _In_opt_ HINSTANCE hPrevInstance,
-    _In_ LPSTR lpCmdLine,
-    _In_ int nShowCmd
-)
+int main()
 {
-    // Initialize logging.
+    // Create a pointer.
+    Core::Pointer person = new Person();
+
+    // Access data at an offset as a concrete data type.
+    person.at(0x0).as<const char*>() = "John Doe";
+    person.at(0x8).as<int>() = 37;
+    
+    // Get the underlying address.
+    delete person.GetAddress<Person*>();
+
+    return 0;
+}
+```
+
+### `Core::Logger`
+
+Named console logger for messages with various levels.
+
+```cpp
+#include "core/Logger.hpp"
+
+
+int main()
+{
+    // Create a console window and enable virtual terminal sequences.
     Core::Logger::Initialize();
 
     // Create a logger.
     Core::Logger logger("Example");
 
+    // Log messages with various levels.
+    logger.Info("Operation successful, duration: %.2f s.", 12.34f);
+    logger.Warning("Invalid numerical value '%c' was found.", '@');
+    logger.Error("Cannot bind socket to port %d.", 8080);
+    
+    return 0;
+}
+```
+
+### `Core::WindowsException`
+
+HRESULT with a custom error message.
+
+```cpp
+#include "core/WindowsException.hpp"
+
+
+int main()
+{
     try
     {
-        Person person =
-        {
-            .Name = "John Doe",
-            .Age = 37,
-        };
-
-        // Create a pointer.
-        Core::Pointer personPointer = &person;
-
-        // Check the pointer's address.
-        if (personPointer.GetAddress() == nullptr)
-        {
-            // Log warning.
-            logger.Warning("Cannot modify the person.");
-        }
-        else
-        {
-            // Access data at an offset from the pointer's address.
-            personPointer.at(offsetof(Person, Name)).as<const char*>() = "Jane Smith";
-            personPointer.at(offsetof(Person, Age)).as<int>() = 45;
-
-            // Log info.
-            logger.Info("Person modified. Name: %s, Age: %d.", person.Name, person.Age);
-        }
-
-        // Create a patch for the first 7 bytes of the MessageBoxA function.
-        Core::Patch patch(logger, MessageBoxA, 0x7);
-
-        // Apply the patch, writing <jmp target> instruction there.
-        patch.WriteJump(0xDEADBEEF);
-
-        // Throw a Windows exception.
-        throw Core::WindowsException(E_ACCESSDENIED, "Cannot open '%s' file.", "C:\\secret.txt");
+        // Throw a Windows exception with an HRESULT.
+        throw Core::WindowsException(E_ACCESSDENIED, "Cannot read file '%s'.", "C:\\secret.txt");
     }
-    catch (const std::exception& ex)
+    catch (const Core::WindowsException& ex)
     {
-        // Log error.
-        logger.Error("%s", ex.what());
+        // Get the HRESULT from the Windows exception.
+        HRESULT hresult = ex.GetHresult();
     }
 
-    return EXIT_SUCCESS;
+    return 0;
 }
 ```
