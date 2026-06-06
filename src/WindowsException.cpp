@@ -7,6 +7,8 @@
 namespace Core
 {
     WindowsException::WindowsException(HRESULT hresult, const char* format, ...)
+        :
+        m_Hresult(hresult)
     {
         char message[1024] = {};
         va_list args = {};
@@ -14,7 +16,12 @@ namespace Core
         vsprintf_s(message, format, args);
         va_end(args);
 
-        sprintf_s(m_What, "%s | HRESULT: 0x%08X", message, hresult);
+        sprintf_s(m_What, "%s | HRESULT: 0x%08X", message, m_Hresult);
+    }
+
+    HRESULT WindowsException::GetHresult() const
+    {
+        return m_Hresult;
     }
 
     const char* WindowsException::what() const

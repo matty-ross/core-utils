@@ -13,9 +13,11 @@ namespace Core
         WindowsException(HRESULT hresult, const char* format, ...);
 
     public:
+        HRESULT GetHresult() const;
         const char* what() const override;
 
     private:
+        HRESULT m_Hresult = {};
         char m_What[1024] = {};
     };
 }

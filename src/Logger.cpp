@@ -20,7 +20,7 @@ namespace Core
         HANDLE consoleOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
         DWORD consoleMode = 0;
         GetConsoleMode(consoleOutputHandle, &consoleMode);
-        consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        consoleMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
         SetConsoleMode(consoleOutputHandle, consoleMode);
     }
 
