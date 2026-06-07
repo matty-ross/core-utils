@@ -17,7 +17,7 @@ namespace Core
         const char* what() const override;
 
     private:
-        HRESULT m_Hresult = {};
+        HRESULT m_Hresult = S_OK;
         char m_What[1024] = {};
     };
 }

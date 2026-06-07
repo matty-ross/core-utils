@@ -11,8 +11,6 @@ A library with various utilities for low-level Windows applications.
 
 ### `Core::Pointer`
 
-Bypasses C++ pointer arithmetic and allows direct access to data at byte offsets.
-
 ```cpp
 #include "core/Pointer.hpp"
 
@@ -32,7 +30,10 @@ int main()
     // Access data at an offset as a concrete data type.
     person.at(0x0).as<const char*>() = "John Doe";
     person.at(0x8).as<int>() = 37;
-    
+
+    // Dereference the pointer.
+    char nameFirstCharacter = person.at(0x0).deref().as<char>();
+
     // Get the underlying address.
     delete person.GetAddress<Person*>();
 
@@ -41,8 +42,6 @@ int main()
 ```
 
 ### `Core::Logger`
-
-Named console logger for messages with various levels.
 
 ```cpp
 #include "core/Logger.hpp"
@@ -56,7 +55,7 @@ int main()
     // Create a logger.
     Core::Logger logger("Example");
 
-    // Log messages with various levels.
+    // Log messages with various severity levels.
     logger.Info("Operation successful, duration: %.2f s.", 12.34f);
     logger.Warning("Invalid numerical value '%c' was found.", '@');
     logger.Error("Cannot bind socket to port %d.", 8080);
@@ -67,9 +66,9 @@ int main()
 
 ### `Core::WindowsException`
 
-HRESULT with a custom error message.
-
 ```cpp
+#include <Windows.h>
+
 #include "core/WindowsException.hpp"
 
 
@@ -86,6 +85,103 @@ int main()
         HRESULT hresult = ex.GetHresult();
     }
 
+    return 0;
+}
+```
+
+### `Core::Patch`
+
+```asm
+.code
+
+
+; A function to patch.
+example_function:
+    mov eax, 1
+    shl eax, 2
+    add eax, ecx
+    add eax, edx
+    ret
+
+
+.const
+
+
+public ExampleFunction
+ExampleFunction dq offset example_function
+
+
+end
+```
+
+```asm
+.code
+
+
+; Instruction that overwrites the original one.
+patch_instruction:
+    mov eax, 5
+
+; Size of the instruction that overwrites the original one.
+patch_instruction_size equ $ - patch_instruction
+
+
+; Redirected code.
+redirected_code:
+    sub eax, ecx
+    sub eax, edx
+    ret
+
+
+.const
+
+
+public g_PatchInstruction
+g_PatchInstruction dq offset patch_instruction
+
+public g_PatchInstructionSize
+g_PatchInstructionSize dq patch_instruction_size
+
+public g_RedirectedCode
+g_RedirectedCode dq redirected_code
+
+
+end
+```
+
+```cpp
+#include <cstddef>
+
+#include "core/Pointer.hpp"
+#include "core/Logger.hpp"
+#include "core/Patch.hpp"
+
+
+extern "C" void* const ExampleFunction;
+
+extern "C" void* const g_PatchInstruction;
+extern "C" const size_t g_PatchInstructionSize;
+extern "C" void* const g_RedirectedCode;
+
+
+int main()
+{
+    // Create a logger for patches and a pointer to a function to patch.
+    Core::Logger logger("Example");
+    Core::Pointer address = ExampleFunction;
+    
+    // Create a patch and write bytes at the address, effectively overwriting the code.
+    Core::Patch(logger, address.at(0x0), 5).WriteBytes(g_PatchInstruction, g_PatchInstructionSize);
+    
+    // Create a patch and write NOP instructions at the address, effectively removing the code.
+    Core::Patch(logger, address.at(0x5), 3).WriteNOPs();
+    
+    // Create a patch and write a JMP instruction at the address, effectively redirecting the code.
+    Core::Patch(logger, address.at(0x8), 5).WriteJMP(g_RedirectedCode);
+    
+    // Call the patched function - original result: 11; new result: -2.
+    int result = reinterpret_cast<int(*)(int, int)>(ExampleFunction)(3, 4);
+    
     return 0;
 }
 ```

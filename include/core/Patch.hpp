@@ -16,7 +16,8 @@ namespace Core
 
     public:
         void WriteBytes(Core::Pointer bytes, size_t size);
-        void WriteJump(Core::Pointer destination);
+        void WriteJMP(Core::Pointer destination);
+        void WriteNOPs();
 
     private:
         void Apply(Core::Pointer bytes, size_t size);

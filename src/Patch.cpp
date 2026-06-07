@@ -20,14 +20,19 @@ namespace Core
         Apply(bytes, size);
     }
 
-    void Patch::WriteJump(Core::Pointer destination)
+    void Patch::WriteJMP(Core::Pointer destination)
     {
-        int32_t offset = static_cast<int32_t>(destination.GetAddress<uint8_t*>() - m_Address.GetAddress<uint8_t*>() - 0x5);
-        
+        // JMP rel32
         uint8_t instruction[] = { 0xE9, 0x00, 0x00, 0x00, 0x00 };
+        int32_t offset = static_cast<int32_t>(destination.GetAddress<uint8_t*>() - m_Address.GetAddress<uint8_t*>() - 0x5);
         Core::Pointer(instruction).at(0x1).as<int32_t>() = offset;
 
         Apply(instruction, sizeof(instruction));
+    }
+
+    void Patch::WriteNOPs()
+    {
+        Apply(nullptr, 0);
     }
     
     void Patch::Apply(Core::Pointer bytes, size_t size)
