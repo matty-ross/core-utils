@@ -155,11 +155,13 @@
     <ClInclude Include="include\core\Logger.hpp" />
     <ClInclude Include="include\core\WindowsException.hpp" />
     <ClInclude Include="include\core\Patch.hpp" />
+    <ClInclude Include="include\core\Path.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\WindowsException.cpp" />
     <ClCompile Include="src\Patch.cpp" />
+    <ClCompile Include="src\Path.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

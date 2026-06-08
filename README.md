@@ -185,3 +185,28 @@ int main()
     return 0;
 }
 ```
+
+### `Core::Path`
+
+```cpp
+#include "core/Path.hpp"
+
+
+int main()
+{
+    // Create a path from an environment variable.
+    Core::Path path("%LOCALAPPDATA%");
+
+    // Append another path.
+    path.Append("Example\\Directory");
+
+    // Check if the path exists.
+    if (!path.Exists())
+    {
+        // Create the entire directory tree.
+        path.CreateDirectoryTree();
+    }
+
+    return 0;
+}
+```
