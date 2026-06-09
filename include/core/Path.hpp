@@ -12,6 +12,7 @@ namespace Core
         Path(const char* path);
 
     public:
+        const char* GetPath() const;
         Path& Append(const char* path);
 
         bool Exists() const;

@@ -15,6 +15,11 @@ namespace Core
         ExpandEnvironmentStringsA(path, m_Path, MAX_PATH);
     }
     
+    const char* Path::GetPath() const
+    {
+        return m_Path;
+    }
+
     Path& Path::Append(const char* path)
     {
         PathAppendA(m_Path, path);
