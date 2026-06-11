@@ -32,34 +32,11 @@ int main()
     person.at(0x8).as<int>() = 37;
 
     // Dereference the pointer.
-    char nameFirstCharacter = person.at(0x0).deref().as<char>();
+    char nameSecondCharacter = person.at(0x0).deref().at(0x1).as<char>();
 
-    // Get the underlying address.
-    delete person.GetAddress<Person*>();
+    // Get the underlying raw pointer.
+    delete person.GetPointer<Person*>();
 
-    return 0;
-}
-```
-
-### `Core::Logger`
-
-```cpp
-#include "core/Logger.hpp"
-
-
-int main()
-{
-    // Create a console window and enable virtual terminal sequences.
-    Core::Logger::Initialize();
-
-    // Create a logger.
-    Core::Logger logger("Example");
-
-    // Log messages with various severity levels.
-    logger.Info("Operation successful, duration: %.2f s.", 12.34f);
-    logger.Warning("Invalid numerical value '%c' was found.", '@');
-    logger.Error("Cannot bind socket to port %d.", 8080);
-    
     return 0;
 }
 ```
@@ -85,6 +62,62 @@ int main()
         HRESULT hresult = ex.GetHresult();
     }
 
+    return 0;
+}
+```
+
+### `Core::Path`
+
+```cpp
+#include "core/WindowsException.hpp"
+#include "core/Path.hpp"
+
+
+int main()
+{
+    // Create a path from an environment variable.
+    Core::Path path("%LOCALAPPDATA%");
+
+    // Append another path.
+    path.Append("Example\\Directory");
+
+    // Check if the path exists.
+    if (!path.Exists())
+    {
+        try
+        {
+            // Create the entire directory tree.
+            path.CreateDirectoryTree();
+        }
+        catch (const Core::WindowsException& ex)
+        {
+            // Handle failure to create the entire directory tree.
+        }
+    }
+
+    return 0;
+}
+```
+
+### `Core::Logger`
+
+```cpp
+#include "core/Logger.hpp"
+
+
+int main()
+{
+    // Create a console window and enable virtual terminal sequences.
+    Core::Logger::Initialize();
+
+    // Create a logger.
+    Core::Logger logger("Example");
+
+    // Log messages with various severity levels.
+    logger.Info("Operation successful, duration: %.2f s.", 12.34f);
+    logger.Warning("Invalid numerical value '%c' was found.", '@');
+    logger.Error("Cannot bind socket to port %d.", 8080);
+    
     return 0;
 }
 ```
@@ -182,31 +215,6 @@ int main()
     // Call the patched function - original result: 11; new result: -2.
     int result = reinterpret_cast<int(*)(int, int)>(ExampleFunction)(3, 4);
     
-    return 0;
-}
-```
-
-### `Core::Path`
-
-```cpp
-#include "core/Path.hpp"
-
-
-int main()
-{
-    // Create a path from an environment variable.
-    Core::Path path("%LOCALAPPDATA%");
-
-    // Append another path.
-    path.Append("Example\\Directory");
-
-    // Check if the path exists.
-    if (!path.Exists())
-    {
-        // Create the entire directory tree.
-        path.CreateDirectoryTree();
-    }
-
     return 0;
 }
 ```

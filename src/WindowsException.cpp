@@ -1,5 +1,6 @@
 #include <cstdarg>
 #include <cstdio>
+#include <Windows.h>
 
 #include "core/WindowsException.hpp"
 
