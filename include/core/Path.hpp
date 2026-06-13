@@ -13,8 +13,8 @@ namespace Core
 
     public:
         const char* GetPath() const;
-        Path& Append(const char* path);
 
+        Path& Append(const char* path);
         bool Exists() const;
         void CreateDirectoryTree() const;
 

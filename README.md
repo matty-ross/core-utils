@@ -81,6 +81,9 @@ int main()
     // Append another path.
     path.Append("Example\\Directory");
 
+    // Get the assembled path.
+    const char* assembledPath = path.GetPath();
+
     // Check if the path exists.
     if (!path.Exists())
     {
@@ -91,7 +94,7 @@ int main()
         }
         catch (const Core::WindowsException& ex)
         {
-            // Handle failure to create the entire directory tree.
+            // ...
         }
     }
 
@@ -114,10 +117,10 @@ int main()
     Core::Logger logger("Example");
 
     // Log messages with various severity levels.
-    logger.Info("Operation successful, duration: %.2f s.", 12.34f);
+    logger.Info("Operation successful. duration: %.2f s", 12.34f);
     logger.Warning("Invalid numerical value '%c' was found.", '@');
-    logger.Error("Cannot bind socket to port %d.", 8080);
-    
+    logger.Error("Cannot bind socket to %s:%d.", "127.0.0.1", 8080);
+
     return 0;
 }
 ```

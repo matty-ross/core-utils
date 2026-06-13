@@ -15,7 +15,7 @@ namespace Core
     {
         ExpandEnvironmentStringsA(path, m_Path, MAX_PATH);
     }
-    
+
     const char* Path::GetPath() const
     {
         return m_Path;
@@ -27,12 +27,12 @@ namespace Core
 
         return *this;
     }
-    
+
     bool Path::Exists() const
     {
         return PathFileExistsA(m_Path) == TRUE;
     }
-    
+
     void Path::CreateDirectoryTree() const
     {
         int result = SHCreateDirectoryExA(NULL, m_Path, nullptr);
@@ -40,7 +40,7 @@ namespace Core
         {
             throw WindowsException(
                 HRESULT_FROM_WIN32(result),
-                "Cannot create directory tree. Path: '%s'.", m_Path
+                "Cannot create directory tree. path: '%s'", m_Path
             );
         }
     }
