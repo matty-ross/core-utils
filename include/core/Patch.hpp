@@ -12,20 +12,20 @@ namespace Core
     class Patch
     {
     public:
-        Patch(const Core::Logger& logger, Core::Pointer address, size_t size);
+        Patch(Pointer address, size_t size, const Logger& logger);
 
     public:
-        void WriteBytes(Core::Pointer bytes, size_t size);
-        void WriteJMP(Core::Pointer destination);
-        void WriteNOPs();
+        void WriteBytes(Pointer bytes, size_t size) const;
+        void WriteJMP(Pointer destination) const;
+        void WriteNOPs() const;
 
     private:
-        void Apply(Core::Pointer bytes, size_t size);
+        void Apply(Pointer bytes, size_t size) const;
 
     private:
-        const Core::Logger& m_Logger;
-
-        Core::Pointer m_Address = nullptr;
+        Pointer m_Address = nullptr;
         size_t m_Size = 0;
+
+        const Logger& m_Logger;
     };
 }

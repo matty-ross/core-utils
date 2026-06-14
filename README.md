@@ -239,6 +239,7 @@ end
 #include <cstddef>
 
 #include "core/Pointer.hpp"
+#include "core/WindowsException.hpp"
 #include "core/Logger.hpp"
 #include "core/Patch.hpp"
 
@@ -252,22 +253,30 @@ extern "C" void* const g_RedirectedCode;
 
 int main()
 {
-    // Create a logger for patches and a pointer to a function to patch.
+    Core::Logger::Initialize();
     Core::Logger logger("Example");
+
     Core::Pointer address = ExampleFunction;
-    
-    // Create a patch and write bytes at the address, effectively overwriting the code.
-    Core::Patch(logger, address.at(0x0), 5).WriteBytes(g_PatchInstruction, g_PatchInstructionSize);
-    
-    // Create a patch and write NOP instructions at the address, effectively removing the code.
-    Core::Patch(logger, address.at(0x5), 3).WriteNOPs();
-    
-    // Create a patch and write a JMP instruction at the address, effectively redirecting the code.
-    Core::Patch(logger, address.at(0x8), 5).WriteJMP(g_RedirectedCode);
-    
+
+    try
+    {
+        // Create a patch and write bytes at the address, effectively overwriting the code.
+        Core::Patch(address.at(0x0), 5, logger).WriteBytes(g_PatchInstruction, g_PatchInstructionSize);
+
+        // Create a patch and write NOP instructions at the address, effectively removing the code.
+        Core::Patch(address.at(0x5), 3, logger).WriteNOPs();
+
+        // Create a patch and write a JMP instruction at the address, effectively redirecting the code.
+        Core::Patch(address.at(0x8), 5, logger).WriteJMP(g_RedirectedCode);
+    }
+    catch (const Core::WindowsException& ex)
+    {
+        // ...
+    }
+
     // Call the patched function - original result: 11; new result: -2.
     int result = reinterpret_cast<int(*)(int, int)>(ExampleFunction)(3, 4);
-    
+
     return 0;
 }
 ```
