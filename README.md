@@ -125,6 +125,56 @@ int main()
 }
 ```
 
+### `Core::File`
+
+```cpp
+#include <cstddef>
+#include <vector>
+
+#include "core/WindowsException.hpp"
+#include "core/Logger.hpp"
+#include "core/File.hpp"
+
+
+int main()
+{
+    Core::Logger::Initialize();
+    Core::Logger logger("Example");
+
+    try
+    {
+        {
+            // Create a file on disk.
+            Core::File file("file.txt", Core::File::Mode::Write, logger);
+
+            // Write the entire file as text.
+            file.WriteAsText("Hello");
+
+            // The file is automatically closed when it goes out of scope.
+        }
+
+        {
+            // Open a file on disk.
+            Core::File file("file.txt", Core::File::Mode::Read, logger);
+
+            // Get the file size.
+            size_t size = file.GetSize();
+
+            // Read the entire file as binary.
+            std::vector<std::byte> content = file.ReadAsBinary();
+
+            // The file is automatically closed when it goes out of scope.
+        }
+    }
+    catch (const Core::WindowsException& ex)
+    {
+        // ...
+    }
+
+    return 0;
+}
+```
+
 ### `Core::Patch`
 
 ```asm
