@@ -23,6 +23,11 @@ namespace Core
         Apply(bytes, size);
     }
 
+    void Patch::WriteNOPs() const
+    {
+        Apply(nullptr, 0);
+    }
+
     void Patch::WriteJMP(Pointer destination) const
     {
         // JMP rel32
@@ -31,11 +36,6 @@ namespace Core
         Pointer(instruction).at(0x1).as<int32_t>() = offset;
 
         Apply(instruction, sizeof(instruction));
-    }
-
-    void Patch::WriteNOPs() const
-    {
-        Apply(nullptr, 0);
     }
 
     void Patch::Apply(Pointer bytes, size_t size) const

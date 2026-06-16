@@ -16,8 +16,8 @@ namespace Core
 
     public:
         void WriteBytes(Pointer bytes, size_t size) const;
-        void WriteJMP(Pointer destination) const;
         void WriteNOPs() const;
+        void WriteJMP(Pointer destination) const;
 
     private:
         void Apply(Pointer bytes, size_t size) const;
