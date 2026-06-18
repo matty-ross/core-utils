@@ -54,7 +54,7 @@ int main()
     try
     {
         // Throw a Windows exception with an HRESULT.
-        throw Core::WindowsException(E_ACCESSDENIED, "Cannot read file '%s'.", "C:\\secret.txt");
+        throw Core::WindowsException(E_ACCESSDENIED, "Failed to read file '%s'.", "C:\\secret.txt");
     }
     catch (const Core::WindowsException& ex)
     {
@@ -119,7 +119,7 @@ int main()
     // Log messages with various severity levels.
     logger.Info("Operation successful. duration: %.2f s", 12.34f);
     logger.Warning("Invalid numerical value '%c' was found.", '@');
-    logger.Error("Cannot bind socket to %s:%d.", "127.0.0.1", 8080);
+    logger.Error("Failed to bind socket to %s:%d.", "127.0.0.1", 8080);
 
     return 0;
 }

@@ -37,7 +37,7 @@ namespace Core
         {
             throw WindowsException(
                 HRESULT_FROM_WIN32(GetLastError()),
-                "Cannot open/create file. path: '%s'", m_Path.GetPath()
+                "Failed to open/create file. path: '%s'", m_Path.GetPath()
             );
         }
 
@@ -94,7 +94,7 @@ namespace Core
         {
             throw WindowsException(
                 HRESULT_FROM_WIN32(GetLastError()),
-                "Cannot read from file. path: '%s', bytes to read: %lu", m_Path.GetPath(), bytesToRead
+                "Failed to read from file. path: '%s', bytes to read: %lu", m_Path.GetPath(), bytesToRead
             );
         }
 
@@ -110,7 +110,7 @@ namespace Core
         {
             throw WindowsException(
                 HRESULT_FROM_WIN32(GetLastError()),
-                "Cannot write to file. path: '%s', bytes to write: %lu", m_Path.GetPath(), bytesToWrite
+                "Failed to write to file. path: '%s', bytes to write: %lu", m_Path.GetPath(), bytesToWrite
             );
         }
 

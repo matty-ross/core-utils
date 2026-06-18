@@ -40,7 +40,7 @@ namespace Core
         {
             throw WindowsException(
                 HRESULT_FROM_WIN32(result),
-                "Cannot create directory tree. path: '%s'", m_Path
+                "Failed to create directory tree. path: '%s'", m_Path
             );
         }
     }

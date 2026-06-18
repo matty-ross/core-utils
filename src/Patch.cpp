@@ -46,7 +46,7 @@ namespace Core
         {
             throw WindowsException(
                 HRESULT_FROM_WIN32(GetLastError()),
-                "Cannot change memory page protection. address: 0x%p, size: %zu", m_Address.GetPointer(), m_Size
+                "Failed to change memory page protection. address: 0x%p, size: %zu", m_Address.GetPointer(), m_Size
             );
         }
 
@@ -59,7 +59,7 @@ namespace Core
         {
             throw WindowsException(
                 HRESULT_FROM_WIN32(GetLastError()),
-                "Cannot restore memory page protection. address: 0x%p, size: %zu", m_Address.GetPointer(), m_Size
+                "Failed to restore memory page protection. address: 0x%p, size: %zu", m_Address.GetPointer(), m_Size
             );
         }
 
