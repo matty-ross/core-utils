@@ -1,6 +1,3 @@
-#pragma comment(lib, "Shlwapi.lib")
-
-
 #include <Windows.h>
 #include <Shlwapi.h>
 #include <ShlObj.h>

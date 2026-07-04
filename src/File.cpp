@@ -37,11 +37,11 @@ namespace Core
         {
             throw WindowsException(
                 HRESULT_FROM_WIN32(GetLastError()),
-                "Failed to open/create file. path: '%s'", m_Path.GetPath()
+                "Failed to open file. path: '%s'", m_Path.GetPath()
             );
         }
 
-        m_Logger.Info("Opened/created file. path: '%s'", m_Path.GetPath());
+        m_Logger.Info("Opened file. path: '%s'", m_Path.GetPath());
     }
 
     File::~File()
